@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+  http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd">
+
+  <changeSet author="Alex Nevsky" id="init.1">
+    <createSequence sequenceName="player_seq" startValue="1" incrementBy="1"/>
+  </changeSet>
+
+  <changeSet author="Alex Nevsky" id="init.2">
+    <createSequence sequenceName="team_seq" startValue="1" incrementBy="1"/>
+  </changeSet>
+
+  <changeSet author="Alex Nevsky"  id="init.3">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="player"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="player">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" unique="true"/>
+      </column>
+      <column name="name" type="VARCHAR2(64)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="age" type="INTEGER"/>
+      <column name="experience_months" type="INTEGER"/>
+    </createTable>
+    <rollback>
+      <dropTable tableName="player"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet author="Alex Nevsky"  id="init.4">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="team"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="team">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" unique="true"/>
+      </column>
+      <column name="name" type="VARCHAR2(64)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="balance" type="NUMBER"/>
+      <column name="commission" type="NUMBER"/>
+      <column name="currency" type="VARCHAR2(3)"/>
+    </createTable>
+    <rollback>
+      <dropTable tableName="team"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet author="Alex Nevsky"  id="init.5">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="team_player"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="team_player">
+      <column name="player_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="team_id" type="BIGINT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="team_player"/>
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>
